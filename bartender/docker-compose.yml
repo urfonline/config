@@ -5,6 +5,7 @@ services:
     image: docker.pkg.github.com/urfonline/bartender/bartender:latest
     volumes:
     - /etc/bartender:/app/config
+    - data:/app/data
     ports:
     - "5000"
     deploy:
