@@ -1,0 +1,12 @@
+version: '3.6'
+
+services:
+  overlay:
+    image: docker.pkg.github.com/urfonline/overlay/overlay:latest
+    volumes:
+    - /etc/nodecg:/usr/src/app/cfg
+    ports:
+    - "9090"
+    deploy:
+      labels:
+        caddy.address: overlay.urfonline.com

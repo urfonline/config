@@ -1,0 +1,13 @@
+version: '3.6'
+
+services:
+  bartender:
+    image: docker.pkg.github.com/urfonline/bartender/bartender:latest
+    volumes:
+    - /etc/bartender:/app/config
+    ports:
+    - "5000"
+    deploy:
+      labels:
+      - "caddy.address=bartender.urfonline.com"
+      - "caddy.proxy.transparent"

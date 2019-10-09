@@ -1,0 +1,11 @@
+version: '3.6'
+
+services:
+  caddy:
+    image: lucaslorentz/caddy-docker-proxy:0.3.1
+    volumes:
+    - /var/local/caddy:/root/.caddy
+    ports:
+    - "80:80"
+    - "443:443"
+    command: /bin/caddy -agree -email tech@urfonline.com
