@@ -2,7 +2,8 @@ archive.urfonline.com {
 	root /media/Storage/archives
 	browse
 
-	basicauth urf htpasswd=/var/.htpasswd {
+	internal /.htpasswd
+	basicauth urf htpasswd=.htpasswd {
 		realm="URF Archive"
 		/
 	}
