@@ -8,9 +8,10 @@ services:
         condition: any
         max_attempts: 5
     volumes:
-    - /var/local/caddy:/root/.caddy
-    - /var/.htpasswd:/var/.htpasswd
+    - /var/local/caddy/data:/root/.caddy
+    - /var/local/caddy/www:/var/www
     - /media/Storage:/media/Storage
+    - /var/.htpasswd:/var/.htpasswd
     - /var/run/docker.sock:/var/run/docker.sock
     configs:
     - caddyfile

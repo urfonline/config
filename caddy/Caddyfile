@@ -7,3 +7,11 @@ archive.urfonline.com {
 		/
 	}
 }
+
+streamer.urfonline.com/archive/ {
+	redir https://archive.urfonline.com
+}
+
+streamer.urfonline.com {
+	root /var/www
+}
