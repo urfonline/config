@@ -7,14 +7,14 @@ services:
     - /etc/bartender:/app/config
     - data:/app/data
     ports:
-    - "5000"
+    - "8000"
     networks:
     - publicweb
     deploy:
       labels:
       - "caddy.address=bartender.urfonline.com"
       - "caddy.proxy.transparent"
-      - "caddy.targetport=5000"
+      - "caddy.targetport=8000"
 
 networks:
   publicweb:
