@@ -27,7 +27,7 @@ services:
       published: 443
       protocol: tcp
       mode: ingress
-    command: /bin/caddy -agree -email tech@urfonline.com -conf /Caddyfile -log stdout
+    command: /bin/caddy -agree -email tech@urfonline.com -docker-caddyfile-path /Caddyfile -log stdout
 
 networks:
   internet:
