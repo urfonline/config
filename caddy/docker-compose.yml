@@ -4,7 +4,7 @@ services:
   caddy:
     image: lucaslorentz/caddy-docker-proxy:0.3.1
     deploy:
-      restart-policy:
+      restart_policy:
         condition: any
         max_attempts: 5
     volumes:
