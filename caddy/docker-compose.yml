@@ -14,7 +14,8 @@ services:
     - /var/.htpasswd:/var/.htpasswd
     - /var/run/docker.sock:/var/run/docker.sock
     configs:
-    - caddyfile
+    - source: caddyfile
+      target: /Caddyfile
     networks:
     - internet
     - publicweb
@@ -40,4 +41,3 @@ networks:
 configs:
   caddyfile:
     file: ./Caddyfile
-    name: Caddyfile
