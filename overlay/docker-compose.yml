@@ -9,6 +9,12 @@ services:
     - logs:/usr/src/app/log
     ports:
     - "9090"
+    networks:
+    - publicweb
     deploy:
       labels:
         caddy.address: overlay.urfonline.com
+
+networks:
+  publicweb:
+    external: true

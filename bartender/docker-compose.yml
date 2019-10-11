@@ -8,7 +8,13 @@ services:
     - data:/app/data
     ports:
     - "5000"
+    networks:
+    - publicweb
     deploy:
       labels:
       - "caddy.address=bartender.urfonline.com"
       - "caddy.proxy.transparent"
+
+networks:
+  publicweb:
+    external: true

@@ -5,7 +5,29 @@ services:
     image: lucaslorentz/caddy-docker-proxy:0.3.1
     volumes:
     - /var/local/caddy:/root/.caddy
+    - /var/.htpasswd:/var/.htpasswd
+    - /media/Storage:/media/Storage
+    configs:
+    - caddyfile
+    networks:
+    - internet
+    - publicweb
     ports:
     - "80:80"
     - "443:443"
-    command: /bin/caddy -agree -email tech@urfonline.com
+    command: /bin/caddy -agree -email tech@urfonline.com -conf /Caddyfile
+
+networks:
+  internet:
+    driver: overlay
+  publicweb:
+    driver: overlay
+    external: true
+    internal: true
+    config:
+    - subnet: 172.20.76.0/24
+
+configs:
+  caddyfile:
+    file: ./Caddyfile
+    name: Caddyfile
