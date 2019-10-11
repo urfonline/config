@@ -14,6 +14,7 @@ services:
     deploy:
       labels:
         caddy.address: overlay.urfonline.com
+        caddy.targetport: "9090"
 
 networks:
   publicweb:

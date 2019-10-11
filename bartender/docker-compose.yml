@@ -14,6 +14,7 @@ services:
       labels:
       - "caddy.address=bartender.urfonline.com"
       - "caddy.proxy.transparent"
+      - "caddy.targetport=5000"
 
 networks:
   publicweb:
