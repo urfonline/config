@@ -20,3 +20,7 @@ services:
 networks:
   publicweb:
     external: true
+
+volumes:
+  data:
+  logs:
