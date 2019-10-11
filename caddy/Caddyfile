@@ -4,7 +4,7 @@ archive.urfonline.com {
 
 	internal /.htpasswd
 	basicauth urf htpasswd=.htpasswd {
-		realm="URF Archive"
+		realm "URF Archive"
 		/
 	}
 }
