@@ -36,8 +36,6 @@ networks:
     driver: overlay
     external: true
     internal: true
-    config:
-    - subnet: 172.20.76.0/24
 
 configs:
   caddyfile:
