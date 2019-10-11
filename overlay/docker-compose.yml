@@ -7,8 +7,6 @@ services:
     - /etc/nodecg:/usr/src/app/cfg
     - data:/usr/src/app/db
     - logs:/usr/src/app/log
-    ports:
-    - "9090"
     networks:
     - publicweb
     deploy:
