@@ -17,6 +17,10 @@ services:
 
 networks:
   app:
+    driver: overlay
+    ipam:
+      config:
+      - subnet: 172.20.77.0/24
   publicweb:
     external: true
 
