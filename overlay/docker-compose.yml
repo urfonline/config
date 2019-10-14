@@ -8,6 +8,7 @@ services:
     - data:/usr/src/app/db
     - logs:/usr/src/app/log
     networks:
+    - app
     - publicweb
     deploy:
       labels:
@@ -16,6 +17,11 @@ services:
         caddy.proxy.websocket: ""
 
 networks:
+  app:
+    driver: overlay
+    ipam:
+      config:
+        - subnet: 172.20.78.0/24
   publicweb:
     external: true
 
