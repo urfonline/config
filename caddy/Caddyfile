@@ -2,6 +2,8 @@ archive.urfonline.com {
 	root /media/Storage/archives
 	browse
 
+	mime .mp3 audio/mpeg
+
 	internal /.htpasswd
 	basicauth urf htpasswd=.htpasswd {
 		realm "URF Archive"
