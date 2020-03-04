@@ -16,5 +16,9 @@ streamer.urfonline.com/archive/ {
 }
 
 streamer.urfonline.com {
-	root /var/www
+	root /var/www/streamer
+}
+
+76podcasting.net {
+	root /var/www/seventysix
 }
