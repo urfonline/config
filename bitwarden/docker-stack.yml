@@ -1,0 +1,216 @@
+version: '3.7'
+
+services:
+  mssql:
+    image: bitwarden/mssql:latest
+    networks:
+      - app
+    deploy:
+      restart_policy:
+        condition: any
+        delay: 10s
+    volumes:
+      - database:/var/opt/mssql/data
+      - /var/log/bitwarden/mssql:/var/opt/mssql/log
+      - backups:/etc/bitwarden/mssql/backups
+    env_file:
+      - /var/private/bwdata/docker/mssql.env
+      - /var/private/bwdata/env/uid.env
+      - /var/private/bwdata/env/mssql.override.env
+
+  web:
+    image: bitwarden/web:latest
+    networks:
+      - app
+      - publicweb
+    deploy:
+      labels:
+        - "caddy.address=bitwarden.urfonline.com"
+        - "caddy.targetport=5000"
+        - "caddy.status=200 /alive"
+        - "caddy.header_1=/alive Content-Type text/plain"
+        - "caddy.proxy.header_downstream_1=X-Frame-Options SAMEORIGIN"
+        - "caddy.proxy.header_downstream_2=Referrer-Policy same-origin"
+        - "caddy.proxy.header_downstream_3=X-Content-Type-Options nosniff"
+        - "caddy.proxy.header_downstream_4=X-XSS-Protection \"1; mode=block\""
+        - "caddy.proxy.header_downstream_5=Strict-Transport-Security max-age=15768000"
+        - "caddy.proxy.header_downstream_6=X-Robots-Tag \"noindex, nofollow\""
+        - "caddy.proxy.header_downstream_7=Content-Security-Policy \"default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://haveibeenpwned.com https://www.gravatar.com; child-src 'self' https://*.duosecurity.com; frame-src 'self' https://*.duosecurity.com; connect-src 'self' wss://bitwarden.example.com https://api.pwnedpasswords.com https://twofactorauth.org; object-src 'self' blob:;\""
+      restart_policy:
+        condition: any
+        delay: 10s
+    volumes:
+      - /var/private/bwdata/web:/etc/bitwarden/web
+    env_file:
+      - /var/private/bwdata/docker/global.env
+      - /var/private/bwdata/env/uid.env
+
+  attachments:
+    image: bitwarden/attachments:latest
+    networks:
+      - app
+      - publicweb
+    deploy:
+      labels:
+        - "caddy.address=bitwarden.urfonline.com"
+        - "caddy.targetport=5000"
+        - "caddy.sourcepath=/attachments/"
+      restart_policy:
+        condition: any
+        delay: 10s
+    volumes:
+      - /var/private/bwdata/core/attachments:/etc/bitwarden/core/attachments
+    env_file:
+      - /var/private/bwdata/docker/global.env
+      - /var/private/bwdata/env/uid.env
+
+  api:
+    image: bitwarden/api:latest
+    networks:
+      - app
+      - publicweb
+    deploy:
+      labels:
+        - "caddy.address=bitwarden.urfonline.com"
+        - "caddy.targetport=5000"
+        - "caddy.sourcepath=/api/"
+      restart_policy:
+        condition: any
+        delay: 10s
+    volumes:
+      - /var/private/bwdata/core:/etc/bitwarden/core
+      - certificates:/etc/bitwarden/ca-certificates
+      - /var/log/bitwarden/api:/etc/bitwarden/logs
+    env_file:
+      - /var/private/bwdata/docker/global.env
+      - /var/private/bwdata/env/uid.env
+      - /var/private/bwdata/env/global.override.env
+
+  identity:
+    image: bitwarden/identity:latest
+    networks:
+      - app
+      - publicweb
+    deploy:
+      labels:
+        - "caddy.address=bitwarden.urfonline.com"
+        - "caddy.targetport=5000"
+        - "caddy.sourcepath=/identity/"
+      restart_policy:
+        condition: any
+        delay: 10s
+    volumes:
+      - /var/private/bwdata/identity:/etc/bitwarden/identity
+      - /var/private/bwdata/core:/etc/bitwarden/core
+      - certificates:/etc/bitwarden/ca-certificates
+      - /var/log/bitwarden/identity:/etc/bitwarden/logs
+    env_file:
+      - /var/private/bwdata/docker/global.env
+      - /var/private/bwdata/env/uid.env
+      - /var/private/bwdata/env/global.override.env
+
+  admin:
+    image: bitwarden/admin:latest
+    networks:
+      - app
+      - publicweb
+    deploy:
+      labels:
+        - "caddy.address=bitwarden.urfonline.com"
+        - "caddy.targetport=5000"
+        - "caddy.sourcepath=/admin"
+        - "caddy.proxy.header_downstream_1=X-Frame-Options SAMEORIGIN"
+        - "caddy.proxy.header_downstream_2=Referrer-Policy same-origin"
+        - "caddy.proxy.header_downstream_3=X-Content-Type-Options nosniff"
+        - "caddy.proxy.header_downstream_4=X-XSS-Protection \"1; mode=block\""
+        - "caddy.proxy.header_downstream_5=Strict-Transport-Security max-age=15768000"
+      restart_policy:
+        condition: any
+        delay: 10s
+    depends_on:
+      - mssql
+    volumes:
+      - /var/private/bwdata/core:/etc/bitwarden/core
+      - certificates:/etc/bitwarden/ca-certificates
+      - /var/log/bitwarden/admin:/etc/bitwarden/logs
+    env_file:
+      - /var/private/bwdata/docker/global.env
+      - /var/private/bwdata/env/uid.env
+      - /var/private/bwdata/env/global.override.env
+
+  icons:
+    image: bitwarden/icons:latest
+    networks:
+      - app
+      - publicweb
+    deploy:
+      labels:
+        - "caddy.address=bitwarden.urfonline.com"
+        - "caddy.targetport=5000"
+        - "caddy.sourcepath=/icons/"
+      restart_policy:
+        condition: any
+        delay: 10s
+    volumes:
+      - certificates:/etc/bitwarden/ca-certificates
+      - /var/log/bitwarden/icons:/etc/bitwarden/logs
+    env_file:
+      - /var/private/bwdata/docker/global.env
+      - /var/private/bwdata/env/uid.env
+
+  notifications:
+    image: bitwarden/notifications:latest
+    networks:
+      - app
+      - publicweb
+    deploy:
+      labels:
+        - "caddy.address=bitwarden.urfonline.com"
+        - "caddy.targetport=5000"
+        - "caddy.sourcepath=/notifications/"
+        - "caddy.proxy.websocket"
+      restart_policy:
+        condition: any
+        delay: 10s
+    volumes:
+      - certificates:/etc/bitwarden/ca-certificates
+      - /var/log/bitwarden/notifications:/etc/bitwarden/logs
+    env_file:
+      - /var/private/bwdata/docker/global.env
+      - /var/private/bwdata/env/uid.env
+      - /var/private/bwdata/env/global.override.env
+
+  events:
+    image: bitwarden/events:latest
+    networks:
+      - app
+      - publicweb
+    deploy:
+      labels:
+        - "caddy.address=bitwarden.urfonline.com"
+        - "caddy.targetport=5000"
+        - "caddy.sourcepath=/events/"
+      restart_policy:
+        condition: any
+        delay: 10s
+    volumes:
+      - certificates:/etc/bitwarden/ca-certificates
+      - /var/log/bitwarden/events:/etc/bitwarden/logs
+    env_file:
+      - /var/private/bwdata/docker/global.env
+      - /var/private/bwdata/env/uid.env
+      - /var/private/bwdata/env/global.override.env
+
+networks:
+  app:
+    driver: overlay
+    ipam:
+      config:
+      - subnet: 172.20.79.0/24
+  publicweb:
+    external: true
+
+volumes:
+  database:
+  backups:
+  certificates:

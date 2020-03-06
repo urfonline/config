@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
   caddy:
-    image: lucaslorentz/caddy-docker-proxy:0.3.1
+    image: lucaslorentz/caddy-docker-proxy:0.3.6
     deploy:
       restart_policy:
         condition: any
