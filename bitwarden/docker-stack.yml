@@ -64,7 +64,7 @@ services:
       - /var/private/bwdata/env/uid.env
 
   api:
-    image: bitwarden/api:latest
+    image: bitbetter/api:latest
     networks:
       - app
       - publicweb
@@ -85,7 +85,7 @@ services:
       - /var/private/bwdata/env/global.override.env
 
   identity:
-    image: bitwarden/identity:latest
+    image: bitbetter/identity:latest
     networks:
       - app
       - publicweb
@@ -115,6 +115,7 @@ services:
       labels:
         - "caddy.address=bitwarden.urfonline.com/admin"
         - "caddy.targetport=5000"
+        - "caddy.proxy.transparent"
         - "caddy.proxy.header_downstream_1=X-Frame-Options SAMEORIGIN"
         - "caddy.proxy.header_downstream_2=Referrer-Policy same-origin"
         - "caddy.proxy.header_downstream_3=X-Content-Type-Options nosniff"
