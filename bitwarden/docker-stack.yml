@@ -115,6 +115,7 @@ services:
       labels:
         - "caddy.address=bitwarden.urfonline.com/admin"
         - "caddy.targetport=5000"
+        - "caddy.targetpath=/admin"
         - "caddy.proxy.transparent"
         - "caddy.proxy.header_downstream_1=X-Frame-Options SAMEORIGIN"
         - "caddy.proxy.header_downstream_2=Referrer-Policy same-origin"
