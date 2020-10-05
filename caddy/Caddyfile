@@ -22,3 +22,12 @@ streamer.urfonline.com {
 76podcasting.net {
 	root /var/www/seventysix
 }
+
+beta.76podcasting.net {
+	root /var/www/seventysix-beta
+	gzip
+
+	rewrite {
+		to {path} /index.html
+	}
+}
