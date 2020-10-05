@@ -28,6 +28,6 @@ beta.76podcasting.net {
 	gzip
 
 	rewrite {
-		to {path} /index.html
+		to {path} /
 	}
 }
