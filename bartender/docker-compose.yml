@@ -2,7 +2,7 @@ version: '3.6'
 
 services:
   bartender:
-    image: ghcr.io/urfonline/bartender/bartender:1.0.6
+    image: ghcr.io/urfonline/bartender/bartender:1.0.7
     volumes:
     - /etc/bartender:/app/config
     - data:/app/data
