@@ -14,9 +14,6 @@ services:
     - /var/local/caddy/www:/var/www
     - /media/Storage:/media/Storage
     - /var/run/docker.sock:/var/run/docker.sock
-    configs:
-    - source: caddyfile
-      target: /Caddyfile
     environment:
     - CADDY_INGRESS_NETWORKS=publicweb
     networks:
