@@ -1,13 +1,11 @@
 archive.urfonline.com {
-	root /media/Storage/archives
-	browse
+	root * /media/Storage/archives
+	file_server browse {
+		hide .htpasswd
+	}
 
-	mime .mp3 audio/mpeg
-
-	internal /.htpasswd
-	basicauth urf htpasswd=.htpasswd {
-		realm "URF Archive"
-		/
+	basicauth * scrypt "URF Archive" {
+		urf dswFoviIwrwAnA3i/zn/rGpiiGQyk+e3xckIua5rMqQ=
 	}
 }
 
@@ -16,18 +14,19 @@ streamer.urfonline.com/archive/ {
 }
 
 streamer.urfonline.com {
-	root /var/www/streamer
+	root * /var/www/streamer
+	file_server
 }
 
 76podcasting.net {
-	root /var/www/seventysix
+	root * /var/www/seventysix
+	file_server
 }
 
 beta.76podcasting.net {
-	root /var/www/seventysix-beta
-	gzip
+	root * /var/www/seventysix-beta
+	file_server
+	encode gzip
 
-	rewrite {
-		to {path} /
-	}
+	try_files {path} /index.html
 }

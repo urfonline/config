@@ -12,9 +12,8 @@ services:
     - publicweb
     deploy:
       labels:
-        caddy.address: overlay.urfonline.com
-        caddy.targetport: "9090"
-        caddy.proxy.websocket: ""
+        caddy: overlay.urfonline.com
+        caddy.reverse_proxy: {{upstreams 9090}}
 
 networks:
   app:

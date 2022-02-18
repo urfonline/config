@@ -11,9 +11,8 @@ services:
     - publicweb
     deploy:
       labels:
-      - "caddy.address=bartender.urfonline.com"
-      - "caddy.proxy.transparent"
-      - "caddy.targetport=8000"
+        caddy: bartender.urfonline.com
+        caddy.reverse_proxy: {{upstreams 8000}}
 
 networks:
   app:

@@ -2,8 +2,10 @@ version: '3.6'
 
 services:
   caddy:
-    image: lucaslorentz/caddy-docker-proxy:0.3.6
+    image: lucaslorentz/caddy-docker-proxy:2.4.0
     deploy:
+      labels:
+        caddy.email: tech@urfonline.com
       restart_policy:
         condition: any
         max_attempts: 5
@@ -29,7 +31,6 @@ services:
       published: 443
       protocol: tcp
       mode: host
-    command: -agree -email tech@urfonline.com -docker-caddyfile-path /Caddyfile -log stdout
 
 networks:
   internet:
@@ -40,5 +41,7 @@ networks:
     internal: true
 
 configs:
-  caddyfile:
+  caddy-file:
     file: ./Caddyfile
+    labels:
+      caddy:
