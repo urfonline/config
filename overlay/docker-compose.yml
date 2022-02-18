@@ -2,11 +2,11 @@ version: '3.6'
 
 services:
   overlay:
-    image: ghcr.io/urfonline/overlay/overlay:1.0.2
+    image: ghcr.io/urfonline/overlay/charity-overlay:1.0.3
     volumes:
-    - /etc/nodecg:/usr/src/app/cfg
-    - data:/usr/src/app/db
-    - logs:/usr/src/app/log
+    - /etc/nodecg:/opt/nodecg/cfg
+    - data:/opt/nodecg/db
+    - logs:/opt/nodecg/log
     networks:
     - app
     - publicweb
