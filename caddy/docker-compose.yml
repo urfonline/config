@@ -15,6 +15,8 @@ services:
     configs:
     - source: caddyfile
       target: /Caddyfile
+    environment:
+    - CADDY_INGRESS_NETWORKS=publicweb
     networks:
     - internet
     - publicweb
