@@ -4,9 +4,9 @@ services:
   overlay:
     image: ghcr.io/urfonline/overlay/charity-overlay:1.1.0
     volumes:
-    - /etc/nodecg:/opt/nodecg/cfg
-    - data:/opt/nodecg/db
-    - logs:/opt/nodecg/log
+    - /etc/nodecg:/usr/src/app/cfg
+    - data:/usr/src/app/db
+    - logs:/usr/src/app/log
     networks:
     - app
     - publicweb
