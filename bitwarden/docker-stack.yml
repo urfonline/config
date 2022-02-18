@@ -1,198 +1,24 @@
 version: '3.7'
 
 services:
-  mssql:
-    image: bitwarden/mssql:1.33.1
-    networks:
-      - app
-    deploy:
-      restart_policy:
-        condition: any
-        delay: 10s
-    volumes:
-      - database:/var/opt/mssql/data
-      - /var/log/bitwarden/mssql:/var/opt/mssql/log
-      - backups:/etc/bitwarden/mssql/backups
-    env_file:
-      - /var/private/bwdata/docker/mssql.env
-      - /var/private/bwdata/env/uid.env
-      - /var/private/bwdata/env/mssql.override.env
-
-  web:
-    image: bitwarden/web:2.13.2
+  vaultwarden:
+    image: vaultwarden/server:latest
     networks:
       - app
       - publicweb
+    volumes:
+      - data:/data
+    environment:
+      - WEBSOCKET_ENABLED=true
+    env_file: vault.env
     deploy:
-      labels:
-        - "caddy=bitwarden.urfonline.com/"
-        - "caddy.reverse_proxy={{upstreams 5000}}"
-        - "caddy.respond=/alive 200"
-        - "caddy.header=/alive Content-Type text/plain"
-        - "caddy.reverse_proxy.header_down_1=X-Frame-Options SAMEORIGIN"
-        - "caddy.reverse_proxy.header_down_2=Referrer-Policy same-origin"
-        - "caddy.reverse_proxy.header_down_3=X-Content-Type-Options nosniff"
-        - "caddy.reverse_proxy.header_down_4=X-XSS-Protection \"1; mode=block\""
-        - "caddy.reverse_proxy.header_down_5=Strict-Transport-Security max-age=15768000"
-        - "caddy.reverse_proxy.header_down_6=X-Robots-Tag \"noindex, nofollow\""
-        - "caddy.reverse_proxy.header_down_7=Content-Security-Policy \"default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https://haveibeenpwned.com https://www.gravatar.com; child-src 'self' https://*.duosecurity.com; frame-src 'self' https://*.duosecurity.com; connect-src 'self' wss://bitwarden.example.com https://api.pwnedpasswords.com https://twofactorauth.org; object-src 'self' blob:;\""
       restart_policy:
         condition: any
-        delay: 10s
-    volumes:
-      - /var/private/bwdata/web:/etc/bitwarden/web
-    env_file:
-      - /var/private/bwdata/docker/global.env
-      - /var/private/bwdata/env/uid.env
-
-  attachments:
-    image: bitwarden/attachments:1.33.1
-    networks:
-      - app
-      - publicweb
-    deploy:
+        max_attempts: 5
       labels:
-        - "caddy=bitwarden.urfonline.com/attachments/"
-        - "caddy.reverse_proxy={{upstreams 5000}}"
-      restart_policy:
-        condition: any
-        delay: 10s
-    volumes:
-      - /var/private/bwdata/core/attachments:/etc/bitwarden/core/attachments
-    env_file:
-      - /var/private/bwdata/docker/global.env
-      - /var/private/bwdata/env/uid.env
-
-  api:
-    image: bitbetter/api:latest
-    networks:
-      - app
-      - publicweb
-    deploy:
-      labels:
-        - "caddy=bitwarden.urfonline.com/api/"
-        - "caddy.reverse_proxy={{upstreams 5000}}"
-      restart_policy:
-        condition: any
-        delay: 10s
-    volumes:
-      - /var/private/bwdata/core:/etc/bitwarden/core
-      - certificates:/etc/bitwarden/ca-certificates
-      - /var/log/bitwarden/api:/etc/bitwarden/logs
-    env_file:
-      - /var/private/bwdata/docker/global.env
-      - /var/private/bwdata/env/uid.env
-      - /var/private/bwdata/env/global.override.env
-
-  identity:
-    image: bitbetter/identity:latest
-    networks:
-      - app
-      - publicweb
-    deploy:
-      labels:
-        - "caddy=bitwarden.urfonline.com/identity/"
-        - "caddy.reverse_proxy={{upstreams 5000}}"
-      restart_policy:
-        condition: any
-        delay: 10s
-    volumes:
-      - /var/private/bwdata/identity:/etc/bitwarden/identity
-      - /var/private/bwdata/core:/etc/bitwarden/core
-      - certificates:/etc/bitwarden/ca-certificates
-      - /var/log/bitwarden/identity:/etc/bitwarden/logs
-    env_file:
-      - /var/private/bwdata/docker/global.env
-      - /var/private/bwdata/env/uid.env
-      - /var/private/bwdata/env/global.override.env
-
-  admin:
-    image: bitwarden/admin:1.33.1
-    networks:
-      - app
-      - publicweb
-    deploy:
-      labels:
-        - "caddy=bitwarden.urfonline.com/admin"
-        - "caddy.reverse_proxy={{upstreams 5000}}"
-        - "caddy.rewrite=* /admin{path}"
-        - "caddy.reverse_proxy.header_down_1=X-Frame-Options SAMEORIGIN"
-        - "caddy.reverse_proxy.header_down_2=Referrer-Policy same-origin"
-        - "caddy.reverse_proxy.header_down_3=X-Content-Type-Options nosniff"
-        - "caddy.reverse_proxy.header_down_4=X-XSS-Protection \"1; mode=block\""
-        - "caddy.reverse_proxy.header_down_5=Strict-Transport-Security max-age=15768000"
-      restart_policy:
-        condition: any
-        delay: 10s
-    depends_on:
-      - mssql
-    volumes:
-      - /var/private/bwdata/core:/etc/bitwarden/core
-      - certificates:/etc/bitwarden/ca-certificates
-      - /var/log/bitwarden/admin:/etc/bitwarden/logs
-    env_file:
-      - /var/private/bwdata/docker/global.env
-      - /var/private/bwdata/env/uid.env
-      - /var/private/bwdata/env/global.override.env
-
-  icons:
-    image: bitwarden/icons:1.33.1
-    networks:
-      - app
-      - publicweb
-    deploy:
-      labels:
-        - "caddy=bitwarden.urfonline.com/icons/"
-        - "caddy.reverse_proxy={{upstreams 5000}}"
-      restart_policy:
-        condition: any
-        delay: 10s
-    volumes:
-      - certificates:/etc/bitwarden/ca-certificates
-      - /var/log/bitwarden/icons:/etc/bitwarden/logs
-    env_file:
-      - /var/private/bwdata/docker/global.env
-      - /var/private/bwdata/env/uid.env
-
-  notifications:
-    image: bitwarden/notifications:1.33.1
-    networks:
-      - app
-      - publicweb
-    deploy:
-      labels:
-        - "caddy=bitwarden.urfonline.com/notifications/"
-        - "caddy.reverse_proxy={{upstreams 5000}}"
-      restart_policy:
-        condition: any
-        delay: 10s
-    volumes:
-      - certificates:/etc/bitwarden/ca-certificates
-      - /var/log/bitwarden/notifications:/etc/bitwarden/logs
-    env_file:
-      - /var/private/bwdata/docker/global.env
-      - /var/private/bwdata/env/uid.env
-      - /var/private/bwdata/env/global.override.env
-
-  events:
-    image: bitwarden/events:1.33.1
-    networks:
-      - app
-      - publicweb
-    deploy:
-      labels:
-        - "caddy=bitwarden.urfonline.com/events/"
-        - "caddy.reverse_proxy={{upstreams 5000}}"
-      restart_policy:
-        condition: any
-        delay: 10s
-    volumes:
-      - certificates:/etc/bitwarden/ca-certificates
-      - /var/log/bitwarden/events:/etc/bitwarden/logs
-    env_file:
-      - /var/private/bwdata/docker/global.env
-      - /var/private/bwdata/env/uid.env
-      - /var/private/bwdata/env/global.override.env
+        caddy: bitwarden.urfonline.com
+        caddy.reverse_proxy: "{{upstreams 80}}"
+        caddy.1_reverse_proxy: "/notifications/hub {{upstreams 3012}}"
 
 networks:
   app:
@@ -204,6 +30,4 @@ networks:
     external: true
 
 volumes:
-  database:
-  backups:
-  certificates:
+  data:
