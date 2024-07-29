@@ -1,0 +1,23 @@
+version: '3.7'
+
+services:
+  emailproxy:
+    image: ghcr.io/blacktirion/email-oauth2-proxy-docker
+    networks:
+    - app
+    volumes:
+    - /etc/email-proxy:/config
+    - data:/data
+    environment:
+      CACHE_STORE: /data/cache.creds
+
+networks:
+  app:
+    driver: overlay
+    ipam:
+      config:
+      - subnet: 172.20.80.0/24
+
+volumes:
+  data:
+
