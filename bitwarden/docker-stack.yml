@@ -2,7 +2,7 @@ version: '3.7'
 
 services:
   vaultwarden:
-    image: vaultwarden/server:1.29.1
+    image: vaultwarden/server:1.31.0
     networks:
       - app
       - publicweb
@@ -18,7 +18,6 @@ services:
       labels:
         caddy: bitwarden.urfonline.com
         caddy.reverse_proxy: "{{upstreams 80}}"
-        caddy.1_reverse_proxy: "/notifications/hub {{upstreams 3012}}"
 
 networks:
   app:
