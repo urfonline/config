@@ -5,6 +5,7 @@ services:
     image: ghcr.io/blacktirion/email-oauth2-proxy-docker
     networks:
     - app
+    - publicweb
     volumes:
     - /etc/email-proxy:/config
     - data:/data
@@ -17,6 +18,8 @@ networks:
     ipam:
       config:
       - subnet: 172.20.80.0/24
+  publicweb:
+    external: true
 
 volumes:
   data:

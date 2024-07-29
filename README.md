@@ -9,4 +9,5 @@ subfolder | description
 **bartender** | Swarm service for urfonline/bartender
 **caddy** | HTTPS entry point & proxying
 **overlay** | Swarm service running NodeCG
-**bitwarden** | Swarm service running Bitwarden
+**bitwarden** | Swarm service running Vaultwarden
+**email-proxy** | OAuth email proxy for Vaultwarden
